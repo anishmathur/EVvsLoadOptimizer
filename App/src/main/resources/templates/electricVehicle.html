@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    
+<style>
+.slidecontainer {
+    width: 50%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+<img src="getpreview.jpg" alt="Hackathon" style="width: 800px; height: 200px; align:center;"/>
+	
+	<form action="#" th:action="@{/electricVehicle}"
+		th:object="${electricVehicle}" method="post">
+		<!--  <p>Percentage of EVs: <input type="text" th:field="*{percentageEV}" /></p>-->
+		<h2>Slide for EV percentage</h2>
+		<div class="slidecontainer">
+			<input type="range" min="0" max="20" value="5"  step="2" class="slider"
+				id="myRange" th:field="*{percentageEV}" />
+			<p>
+				EV (%): <span id="demo"></span>
+			</p>
+		</div>
+		
+		<h2>Select hour range to charge</h2>
+		<div class="slidecontainer">
+			<input type="range" min="0" max="21" class="slider" step="3" 
+				id="myRange2" th:field="*{startHour}" />
+			<p>
+				Hour Range: <span id="demo2"></span> - <span id="demo3"></span>
+			</p>
+		</div>
+		
+		<!-- <p>
+		<label for = "price">Price range:</label>
+		<input type = "text" id = "price" 
+            style = "border:0; color:#b9cd6d; font-weight:bold;"/>
+      </p>
+      <div id = "slider-3"></div> -->
+		
+		
+		<h2>Enter Required Load(MW): </h2>
+		<p>	<input type="text" th:field="*{requiredMW}" />
+		</p>
+		<p>
+			<input type="submit" value="Submit" /> <input type="reset"
+				value="Reset" />
+		</p>
+
+	</form>
+	
+	<iframe width="800" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiNGZlZGYwZmYtZDk3NC00NWJkLWI5NGYtMzIxMzc0MTNiNGY4IiwidCI6Ijk4NjlhYTBkLWViYmEtNGY4Yy05Mzk5LTdkZmY3NjY1YjFkMSJ9" frameborder="0" allowFullScreen="true"></iframe>
+
+
+	<script>
+	
+		var slider = document.getElementById("myRange");
+		var output = document.getElementById("demo");
+		output.innerHTML = slider.value;
+
+		slider.oninput = function() {
+			output.innerHTML = this.value;
+		}
+		
+		var slider1 = document.getElementById("myRange2");
+		var output1 = document.getElementById("demo2");
+		var output2 = document.getElementById("demo3");
+		output.innerHTML = slider.value;
+
+		slider1.oninput = function() {
+			output1.innerHTML = this.value;
+			output2.innerHTML = parseInt(this.value, 10)+3;
+		}
+		
+		
+		
+	</script>
+</body>
+</html>

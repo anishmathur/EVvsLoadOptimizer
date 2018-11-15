@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  
+  <link rel="stylesheet" href="css/rSlider.min.css"/>
+    <script src="js/rSlider.min.js"></script>
+
+  
+</head>
+<body>
+
+<style>
+body {
+    background-image: url("image01.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+a:hover:after {
+  background: #47c9af;
+}
+</style>
+	
+	<script type="text/javascript">
+window.onload = function () {
+
+var slider1 = new rSlider({
+                    target: '#slider1',
+                    values: [20, 25, 30, 35, 40, 45, 50],
+                    range: false,
+                    set: [25],
+                    tooltip: false,
+                    onChange: function (vals) {
+                        console.log(vals);
+                    }
+                });
+
+				
+				var slider2 = new rSlider({
+                    target: '#slider2',
+                    values: {min: 0, max: 24},
+                    step: 3,
+                    range: true,
+                    set: [3, 6],
+                    scale: true,
+                    labels: false,
+                    onChange: function (vals) {
+                        console.log(vals);
+                    }
+                });
+				
+				/* var sliderSelect1 = document.getElementById("slider1");
+		var output = document.getElementById("demo");
+		output.innerHTML = sliderSelect1.value;
+ */
+		/* sliderSelect1.oninput = function() {
+			output.innerHTML = this.value;
+		} */
+		
+		/* var sliderSelect2 = document.getElementById("slider2");
+		var output1 = document.getElementById("demo2");
+		//var output2 = document.getElementById("demo3");
+		output.innerHTML = sliderSelect2.value; */
+
+		/* sliderSelect2.oninput = function() {
+			output1.innerHTML = this.value;
+			output2.innerHTML = parseInt(this.value, 10)+3;
+		} */
+
+var dataPoints1 = [];
+
+var endpoint="/viewCharts";
+$.getJSON(endpoint)
+.done(function(data){
+	//console.log(data);
+	$.each(data, function(key, value){
+        dataPoints1.push({label: value[0], y: parseInt(value[1])});
+       
+    });
+});
+console.log("Archit");
+console.log(dataPoints1);
+console.log("Archit");
+
+var chart1 = new CanvasJS.Chart("chartContainer1", {
+	theme: "light2",
+	animationEnabled: true,
+	backgroundColor: "#CDDFE9",
+	title: {
+		text: "Winter Forecast"
+	},
+	axisX: {
+		title: "Fiscal Year"
+	},
+	axisY: {
+		title: "Production ( in million tonnes )"
+	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: "area",
+		dataPoints: dataPoints1
+	}
+	]
+});
+
+
+
+
+
+var chart2 = new CanvasJS.Chart("chartContainer2", {
+	theme: "light2",
+	animationEnabled: true,
+	backgroundColor: "#CDDFE9",
+	title: {
+		text: "Summer Forecast"
+	},
+	axisX: {
+		title: "Fiscal Year"
+	},
+	axisY: {
+		title: "Production ( in million tonnes )"
+	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: "area",
+		dataPoints: [
+			{ label: "apple",  y: 10  },
+			{ label: "orange", y: 15  },
+			{ label: "banana", y: 25  },
+			{ label: "mango",  y: 30  },
+			{ label: "grape",  y: 28  }
+		]
+	}
+	]
+});
+chart1.render();
+chart2.render();
+}
+
+
+var dataPoints1 = [];
+var dataPoints2 = [];
+function changeGraphType(chartType) {
+	
+	var endpoint="/viewCharts/";
+	 $.getJSON(endpoint)
+	 .done(function(data){
+		// console.log(data);
+		 $.each(data, function(key, value){
+		        dataPoints1.push({x: value[0], y: parseInt(value[1])});
+		    });
+	 });
+	 
+	 var endpoint2="/viewCharts2/";
+	 $.getJSON(endpoint2)
+	 .done(function(data){
+		 //console.log(data);
+		 $.each(data, function(key, value){
+		        dataPoints2.push({x: value[0], y: parseInt(value[1])});
+		    });
+	 });
+	 
+		chart1 = new CanvasJS.Chart("chartContainer1", {
+	theme: "light2",
+	animationEnabled: true,
+	backgroundColor: "#CDDFE9",
+	title: {
+		text: "Winter Forecast"
+	},
+	axisX: {
+		title: "Fiscal Year"
+	},
+	axisY: {
+		title: "Production ( in million tonnes )"
+	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: chartType,
+		dataPoints: dataPoints1,
+		
+	},
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: chartType,
+		dataPoints: dataPoints2,
+		
+	}
+	]
+});
+		
+		
+
+chart2 = new CanvasJS.Chart("chartContainer2", {
+	theme: "light2",
+	animationEnabled: true,
+	backgroundColor: "#CDDFE9",
+	title: {
+		text: "Summer Forecast"
+	},
+	axisX: {
+		title: "Fiscal Year"
+	},
+	axisY: {
+		title: "Production ( in million tonnes )"
+	},
+	data: [
+	{
+		// Change type to "bar", "area", "spline", "pie",etc.
+		type: chartType,
+		dataPoints: [
+			{ label: "apple",  y: 10  },
+			{ label: "orange", y: 15  },
+			{ label: "banana", y: 25  },
+			{ label: "mango",  y: 30  },
+			{ label: "grape",  y: 28  }
+		]
+	}
+	]
+});
+chart1.render();
+chart2.render();
+}
+
+</script>
+
+<div class="container">
+  <div class="page-header" style="margin-top:10px; border-bottom:none;">
+    <img src="getpreview.jpg" alt="Hackathon" style="width: 100%; height: 100px; align:center;"/>      
+  </div>
+  
+  <div class="row">
+    <div class="col-sm-4" >
+		
+		<form action="#" th:action="@{/electricVehicle}"
+			th:object="${electricVehicle}" method="post" style="padding:10px; border-radius:5px; height:460px; border:1px solid #CDDFE9; background-color:#CDDFE9;">
+			
+			<ul class="nav nav-pills nav-justified" style="border:1px solid #B7CEEC;border-radius:5px;background-color:#B7CEEC;">
+			  <li><a><strong></strong></a></li>
+			</ul>
+			<br/><br/><br/>
+			<!--  <p>Percentage of EVs: <input type="text" th:field="*{percentageEV}" /></p>-->
+			<div class="form-group">
+			<label for="percentageEV">EV Percentage(%): </label>
+			<div class="slidecontainer" style="width:100%;">
+				<input type="text" id="slider1" class="slider" th:field="*{percentageEV}" />
+			</div>
+			<br/>
+			</div>
+			
+			<div class="form-group">
+			<label for="startHour">Hour Range to Charge:</label>
+			
+			<div style="width:100%;" class="ui-content"><br/><br/>
+				<input type="text" id="slider2" class="slider" th:field="*{startHour}" />
+			</div>
+			<br/>
+			</div>
+			
+			<!-- <p>
+			<label for = "price">Price range:</label>
+			<input type = "text" id = "price" 
+				style = "border:0; color:#b9cd6d; font-weight:bold;"/>
+		  </p>
+		  <div id = "slider-3"></div> -->
+			<div class="form-group">
+			<label for="requiredMW">Required Load(KHW):</label>
+			<input type="text" class="form-control"  th:field="*{requiredMW}" id="usr"/>
+			</div>
+			
+			<div class="form-group" style="float:right;">
+			<p><button type="submit" class="btn btn-default">Submit</button> 
+				<button type="submit" class="btn btn-default">Reset</button>
+			</p>
+			</div>
+
+		</form>
+	</div>
+    
+	<div class="col-sm-8">
+		<div class="row">
+			<ul class="nav nav-pills nav-justified" style="border:1px solid #B7CEEC;border-radius:5px;background-color:#B7CEEC;">
+			  <li class="active"><a data-toggle="tab"  onclick="changeGraphType('area');"><strong>Area</strong></a></li>
+			  <li><a data-toggle="tab" onclick="changeGraphType('line');"><strong>Line</strong></a></li>
+			  <li><a data-toggle="tab" onclick="changeGraphType('column');"><strong>Bar</strong></a></li>
+			  <li><a data-toggle="tab" onclick="changeGraphType('pie');"><strong>Pie</strong></a></li>
+			  <li><a data-toggle="tab" onclick="changeGraphType('spline');"><strong>Spline</strong></a></li>
+			</ul>
+		</div>
+		<div class="row" style="padding:10px; border-radius:5px; height:420px; border:1px solid #CDDFE9; background-color:#CDDFE9;">
+			<div  class="col-sm-6" id="chartContainer1" style="height: 350px; width:350px; float:left;padding:0;"></div>
+			<div  class="col-sm-6" id="chartContainer2" style="height: 350px; width:350px; float:right;padding:0;"></div>
+		</div>
+	</div>
+  </div>
+  
+  <div class="page-footer" style="height:120px;">
+  </div>  
+  
+  </div>
+
+
+<script>
+	
+		/* var slider = document.getElementById("slider1");
+		var output = document.getElementById("demo");
+		output.innerHTML = slider.value;
+
+		slider.oninput = function() {
+			output.innerHTML = this.value;
+		}
+		
+		var slider1 = document.getElementById("slider2");
+		var output1 = document.getElementById("demo2");
+		output.innerHTML = slider.value;
+
+		slider1.oninput = function() {
+			output1.innerHTML = this.value;
+			output2.innerHTML = parseInt(this.value, 10)+3;
+		}
+		 */
+		
+		
+	</script>
+
+</body>
+</html>
