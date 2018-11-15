@@ -75,8 +75,9 @@ print(dfFcstWinter)
 dfTrainingSet = pd.read_csv('D:/AESO/Hackathon 2018/LoadModel/Load_2010_2017.csv')
 dfTrainingSet['ds'] = pd.to_datetime(dfTrainingSet['ds'])
 dfTrainingSet = dfTrainingSet[ (dfTrainingSet['ds'].dt.month < 4) | (dfTrainingSet['ds'].dt.month == 12) ]
+#dfTrainingSet.concat(dfFcstWinter)
+dfTrainingSet = pd.concat([dfTrainingSet,dfFcstWinter])
 print (dfTrainingSet)
-dfTrainingSet.append(dfFcstWinter)
 #train
 m = Prophet()
 m.fit(dfTrainingSet)
@@ -86,6 +87,13 @@ futurewinter = m.make_future_dataframe(periods=17520, freq='H')
 fcstwinter = m.predict(futurewinter)
 figwinter = m.plot(fcstwinter)
 figwinter = m.plot_components(fcstwinter)
+
+# DF TO EXCEL
+from pandas import ExcelWriter
+
+writer = ExcelWriter('D:/AESO/Hackathon 2018/LoadModel/PythonExportHourlyWinter.xlsx')
+fcstwinter.to_excel(writer,'Sheet5')
+writer.save()
 
 #create a for loop
 #run these steps for all times and all percentage
