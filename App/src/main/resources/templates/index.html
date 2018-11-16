@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-  <title>Bootstrap Example</title>
+  <title>Hackathon Demo</title>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
@@ -92,11 +92,11 @@ var slider1 = new rSlider({
   <div class="row">
     <div class="col-sm-4" >
 
-				<form onsubmit="return false;" action="electricVehicle" method="post" style="padding: 10px; border-radius: 5px; height: 460px; border: 1px solid #337ab7; background-color: #CDDFE9;">
+				<form onsubmit="return false;" action="electricVehicle" method="post" style="background-image: linear-gradient(#CDDFE9, #337ab7); padding: 10px; border-radius: 5px; height: 460px; border: 1px solid #337ab7; background-color: #CDDFE9;">
 
 					<br/><br/>
 
-					<div class="form-group" style="width: 20%; float: left;">
+					<div class="form-group" style="width: 35%; float: left;">
 					
 						<label for="requiredMW">Load/EV (KWh):</label> 
 						<input type="text" class="form-control" name="requiredMW" value="105" />
@@ -137,13 +137,14 @@ var slider1 = new rSlider({
 	<div class="col-sm-8">
 		<div class="row">
 			<ul class="nav nav-pills nav-justified" style="border:1px solid #B7CEEC;border-radius:5px;background-color:#B7CEEC;">
-			<li class="active"><a data-toggle="tab" id="line" onclick="changeGraphType('line');"><strong>Line</strong></a></li>
-			<li><a data-toggle="tab" id="bar" onclick="changeGraphType('bar');"><strong>Bar</strong></a></li>
+			<li class="active"><a data-toggle="tab" id="winter" onclick="changeGraphType('line');"><strong>Winter</strong></a></li>
+			<li><a data-toggle="tab" id="summer" onclick="changeGraphType('bar');"><strong>Summer</strong></a></li>
 			  	
 			</ul>
+			
 		</div>
-		<div class="row" style="padding:10px; border-radius:5px; height:420px; border:1px solid #337ab7; background-color:#F9FBFD;" id="parentDiv">		
-		</div>
+		<div class="row" style="padding:10px; border-radius:5px; height:420px; border:1px solid #337ab7; background-color:#F9FBFD;" id="parentDiv"></div>
+		<div class="row" style="padding:10px; border-radius:5px; height:420px; border:1px solid #337ab7; background-color:#F9FBFD; display: none;" id="parentDiv2">	</div>	
 	</div>
 	
 	

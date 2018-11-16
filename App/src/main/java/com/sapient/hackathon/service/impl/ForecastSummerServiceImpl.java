@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.sapient.hackathon.dao.ForecastSummerDao;
 import com.sapient.hackathon.domain.ForecastSummer;
+import com.sapient.hackathon.domain.ForecastWinter;
 import com.sapient.hackathon.domain.Permutation;
 import com.sapient.hackathon.domain.SettlementInterval;
 import com.sapient.hackathon.model.ChartsResponse;
@@ -60,10 +61,10 @@ public class ForecastSummerServiceImpl implements ForecastSummerService{
 		hourMap.put("21,24",8);
 		
 		//TODO: remove hardcoded value
-		Permutation permutation = permutationService.getPermutationForEVPercentandWindow(0, hourMap.get(requestedHour));
+		Permutation permutation = permutationService.getPermutationForEVPercentandWindow(evpercentage, hourMap.get(requestedHour));
 		System.out.println("SUMMER-Permutation :"+permutation.getId());
 		//Get Max yHat between settlement interval 105193,113952
-		Double yhat = forecastSummerDao.getMaxYhat(permutation.getId(), 105193,113952);
+		Double yhat = forecastSummerDao.getMaxYhat(permutation.getId(), 107353,111744);
 		System.out.println("SUMMER-Max yHat between settlement interval 105193,113952:"+yhat);
 		
 		
@@ -71,8 +72,16 @@ public class ForecastSummerServiceImpl implements ForecastSummerService{
 		List<Integer> sids = forecastSummerDao.getSettlementInterval(yhat);
 		System.out.println("SUMMER-Settlement Intervals for max yHat:"+sids);
 		
+		int setId=0;
+		for (Integer temp : sids) {
+			if(temp>=107353 && temp<=111744){
+				setId = temp;
+			}
+			
+		}
+		
 		//Get Settlement Interval for Max Yhat-sid
-		SettlementInterval siMaxYhat = settlementIntervalService.getSettelementInterval(sids.get(0));
+		SettlementInterval siMaxYhat = settlementIntervalService.getSettelementInterval(setId);
 		System.out.println("SUMMER-Settlement Interval for Max Yhat-settlementInterval:"+siMaxYhat.getEffectiveEndTime());
 		
 		//Let all settlement interval for that day
@@ -91,10 +100,12 @@ public class ForecastSummerServiceImpl implements ForecastSummerService{
 		
 		System.out.println("SUMMER-Sids"+sis.get(0).getId());
 		
-		List<ForecastSummer> forecasts = forecastSummerDao.getForecastForASummerDay(sis.get(0).getId(), sis.get(0).getId()+23);
+		List<ForecastSummer> forecastsWithoutEV = forecastSummerDao.getForecastForASummerDay(81,sis.get(0).getId(), sis.get(0).getId()+23);
+		List<ForecastSummer> forecastsWithEV = forecastSummerDao.getForecastForASummerDay(permutation.getId(),sis.get(0).getId(), sis.get(0).getId()+23);
+		
 		
 		ChartsResponse chartResponse = new ChartsResponse();
-		chartResponse.setAppName("Summer Forecast");
+		chartResponse.setAppName("Summer Forecast for 2022");
 		
 		List<String> lables = new ArrayList<String>();
 		IntStream.range(1,24).forEach(i -> lables.add(Integer.toString(i)));
@@ -104,16 +115,23 @@ public class ForecastSummerServiceImpl implements ForecastSummerService{
 		List<Dataset> datasets = new ArrayList<Dataset>();
 		Dataset dataset = new Dataset();
 		
-		dataset.setName("My First dataset");				
-		dataset.setValue(forecasts.stream().map(ForecastSummer::getyHat).collect(Collectors.toList()));
+		dataset.setName(" Load with EVs ");				
+		dataset.setValue(forecastsWithEV.stream().map(ForecastSummer::getyHat).collect(Collectors.toList()));
 		datasets.add(dataset);
 		
 		
 		Dataset datasetNormalDay = new Dataset();
 		
-		datasetNormalDay.setName("My Second dataset");				
-		datasetNormalDay.setValue(forecasts.stream().map(ForecastSummer::getyHat).map(i->i-500).collect(Collectors.toList()));
+		datasetNormalDay.setName(" Load without EVs ");				
+		datasetNormalDay.setValue(forecastsWithoutEV.stream().map(ForecastSummer::getyHat).collect(Collectors.toList()));
 		datasets.add(datasetNormalDay);
+		Dataset forecastedGeneration = new Dataset();
+		List<Double> generation = new ArrayList<Double>();
+		IntStream.range(1,24).forEach(i -> generation.add(12880.0));
+		generation.stream().forEach(System.out::println);
+		forecastedGeneration.setName("Generation");;
+		forecastedGeneration.setValue(generation);
+		datasets.add(forecastedGeneration);
 		chartResponse.setDatasets(datasets);
 		
 		return chartResponse;

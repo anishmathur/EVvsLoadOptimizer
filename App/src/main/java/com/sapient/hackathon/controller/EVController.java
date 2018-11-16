@@ -85,7 +85,7 @@ public class EVController {
     }*/
 	
 	
-	@RequestMapping("/viewCharts")
+	@RequestMapping("/viewWinterCharts")
     public List<ChartsResponse> greetingSubmit(@ModelAttribute ElectricVehicle electricVehicle, HttpSession session) {
     	
     	System.out.println("percentageEV="+electricVehicle.getPercentageEV()+"&startHour="+electricVehicle.getStartHour()+"&requiredMW="+electricVehicle.getRequiredMW());
@@ -95,7 +95,29 @@ public class EVController {
     	//electricVehicle.setRequiredMW(electricVehicleService.addValue(electricVehicle.getRequiredMW()));
        
     	List<ChartsResponse> chartsResponse = new ArrayList<ChartsResponse>();
-		chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+    	chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(((ElectricVehicle)session.getAttribute("eVehicle")).getPercentageEV(), ((ElectricVehicle)session.getAttribute("eVehicle")).getStartHour()));
+		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay());
+		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay());
+		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay());
+		
+    	
+    	return chartsResponse;
+    }
+	
+	@RequestMapping("/viewSummerCharts")
+    public List<ChartsResponse> viewSummerCharts(@ModelAttribute ElectricVehicle electricVehicle, HttpSession session) {
+    	
+    	System.out.println("percentageEV="+electricVehicle.getPercentageEV()+"&startHour="+electricVehicle.getStartHour()+"&requiredMW="+electricVehicle.getRequiredMW());
+    	
+    	//System.out.println("Inside 45-"+((ElectricVehicle)session.getAttribute("eVehicle")).getPercentageEV());
+    	//System.out.println("Inside 21: "+forecastWinterService.getForecastForAwinterDay().size());
+    	//electricVehicle.setRequiredMW(electricVehicleService.addValue(electricVehicle.getRequiredMW()));
+       
+    	List<ChartsResponse> chartsResponse = new ArrayList<ChartsResponse>();
+    	chartsResponse.add(forecastSummerService.getForecastForASummerDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+    	
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(((ElectricVehicle)session.getAttribute("eVehicle")).getPercentageEV(), ((ElectricVehicle)session.getAttribute("eVehicle")).getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay());

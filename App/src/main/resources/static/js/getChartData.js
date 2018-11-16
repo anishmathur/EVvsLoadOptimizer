@@ -1,5 +1,6 @@
 var userScript = (function(){
 var chartData = [];
+var chartData2 = [];
 var charts = [];
 
 /* Add default config to make charts responsive */
@@ -12,7 +13,7 @@ var prepareChartContext = function (canvasNode,chartdata) {
 	 /* body... */
 	 var ctx = canvasNode[0].getContext("2d");
 	 ctx.canvas.width = "600";
-	 ctx.canvas.height = "300";
+	 ctx.canvas.height = "250";
 	 var data = {
     labels: chartdata.lables,
     
@@ -25,7 +26,8 @@ var prepareChartContext = function (canvasNode,chartdata) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[0].value
+            data: chartdata.datasets[0].value,
+            fill: false
         },
         {
             label: chartdata.datasets[1].name,
@@ -35,17 +37,19 @@ var prepareChartContext = function (canvasNode,chartdata) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[1].value
+            data: chartdata.datasets[1].value,
+            fill: false
         },
         {
             label: chartdata.datasets[2].name,
-            fillColor: "rgba(0,100,219,0.1)",
-            strokeColor: "rgba(0,100,219,1)",
-            pointColor: "rgba(0,100,219,1)",
+            fillColor: "rgb(255,255,255,0)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(200,200,219,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[2].value
+            data: chartdata.datasets[2].value,
+            fill: false
         },
         ]
 	 
@@ -78,7 +82,7 @@ var createContainerNode = function () {
 
 var getChartData = function (percentageEV, startHour, requiredMW) {
 	
-	var endpoint="/viewCharts?percentageEV="+percentageEV+"&startHour="+startHour+"&requiredMW="+requiredMW;
+	var endpoint="/viewWinterCharts?percentageEV="+percentageEV+"&startHour="+startHour+"&requiredMW="+requiredMW;
 	 $.getJSON(endpoint)	 
 	 .done(function(data){
 	 	var parentDiv = $("#parentDiv");
@@ -107,6 +111,10 @@ var getChartData = function (percentageEV, startHour, requiredMW) {
 	 	 $.each(chartData,function (index,value) {
 	 	 	 /* body... */ 
 	 	 	 charts[index] = new Chart(value.ctx).Line(value.data,options);
+	 	 	var legend = charts[index].generateLegend();
+
+	 	 	  //and append it to your page somewhere
+	 	 	  $(parentDiv).append(legend);
 	 	 });
 
 	 })
@@ -114,18 +122,14 @@ var getChartData = function (percentageEV, startHour, requiredMW) {
     	var err = textStatus + ", " + error;
     	console.log( "Request Failed: " + err );
 	});
-};
-
-
-var getChartData2 = function (percentageEV, startHour, requiredMW) {
-	
-	var endpoint="/viewCharts2?percentageEV="+percentageEV+"&startHour="+startHour+"&requiredMW="+requiredMW;
+	 
+	 var endpoint="/viewSummerCharts?percentageEV="+percentageEV+"&startHour="+startHour+"&requiredMW="+requiredMW;
 	 $.getJSON(endpoint)	 
 	 .done(function(data){
-	 	var parentDiv = $("#parentDiv");
+	 	var parentDiv = $("#parentDiv2");
 	 	/* little housekeeping */
 	 	$(parentDiv).empty();
-	 	chartData = [];
+	 	chartData2 = [];
 		charts = [];
 	 	var containerNode;
 	 	var canvasNode;
@@ -133,13 +137,13 @@ var getChartData2 = function (percentageEV, startHour, requiredMW) {
 	 		if (i%3 == 0) {
 	 			containerNode = createContainerNode();
 	 			canvasNode = createCanvasNode();
-	 			chartData[i] = prepareChartContext(canvasNode.canvasHandler,data[i]);
+	 			chartData2[i] = prepareChartContext(canvasNode.canvasHandler,data[i]);
 	 			$($(canvasNode.canvasNodeHandler).find('span')).append(document.createTextNode(data[i].appName));
 	 			$(containerNode).append(canvasNode.canvasNodeHandler);
 	 			$(parentDiv).append(containerNode);
 	 		} else{
 	 			canvasNode = createCanvasNode();
-	 			chartData[i] = prepareChartContext(canvasNode.canvasHandler,data[i]);
+	 			chartData2[i] = prepareChartContext(canvasNode.canvasHandler,data[i]);
 	 			$($(canvasNode.canvasNodeHandler).find('span')).append(document.createTextNode(data[i].appName));	 	 
 	 			$(containerNode).append(canvasNode.canvasNodeHandler);
 	 		};
@@ -148,6 +152,10 @@ var getChartData2 = function (percentageEV, startHour, requiredMW) {
 	 	 $.each(chartData,function (index,value) {
 	 	 	 /* body... */ 
 	 	 	 charts[index] = new Chart(value.ctx).Line(value.data,options);
+			 var legend = charts[index].generateLegend();
+
+	 	 	  //and append it to your page somewhere
+	 	 	  $(parentDiv).append(legend);
 	 	 });
 
 	 })
@@ -157,7 +165,9 @@ var getChartData2 = function (percentageEV, startHour, requiredMW) {
 	});
 };
 
-$("#line").click(function () {
+$("#winter").click(function () {
+	$("#parentDiv").css('display','block');
+	$("#parentDiv2").css('display','none');
 	 /* body... */ 
 	$.each(chartData,function (index,value) {
 	 	 	 /* destroy previous chart */
@@ -168,14 +178,16 @@ $("#line").click(function () {
 	 	 });	 
 });
 
-$("#bar").click(function () {
+$("#summer").click(function () {
+	$("#parentDiv").css('display','none');
+	$("#parentDiv2").css('display','block');
 	 /* body... */ 
-	$.each(chartData,function (index,value) {
+	$.each(chartData2,function (index,value) {
 	 	 	 /* destroy previous chart */ 
 	 	 	if(charts[index] !== undefined || charts[index] !== null){
 	 	 	 	charts[index].destroy();
 	 	 	 }
-	 	 	charts[index] =  new Chart(value.ctx).Bar(value.data,options);
+	 	 	charts[index] =  new Chart(value.ctx).Line(value.data,options);
 	 	 });	 
 });
 
