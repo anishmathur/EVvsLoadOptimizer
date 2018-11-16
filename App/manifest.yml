@@ -1,2 +1,5 @@
-application: 
-    name:evDisruptionService
+applications:
+- name: evDisruption
+  memory: 1024M
+  routes:
+  - route: evDisruption.cfapps.io
