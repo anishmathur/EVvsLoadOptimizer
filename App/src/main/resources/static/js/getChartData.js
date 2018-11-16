@@ -40,7 +40,7 @@ var prepareChartContext = function (canvasNode,chartdata) {
         },
         {
             label: chartdata.datasets[2].name,
-            fillColor: "rgba(0,100,219,0.1)",
+            fillColor: "rgb(255,255,255,0)",
             strokeColor: "rgba(0,100,219,1)",
             pointColor: "rgba(0,100,219,1)",
             pointStrokeColor: "#fff",
