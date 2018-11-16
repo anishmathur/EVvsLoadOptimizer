@@ -11,4 +11,10 @@ public interface ForecastWinterDao {
 	public List<ForecastWinter> getForecastForAwinterDay();
 	
 	public List<ForecastWinter> getForecastForANormalDay();
+	
+	public Double getMaxYhat(int permuation, int startSettlementIntervalId, int endSettlementIntervalId);
+
+	public List<Integer> getSettlementInterval(Double integer);
+
+	public List<ForecastWinter> getForecastForAwinterDay(int permuation,int startId, int endId);
 }

@@ -22,6 +22,7 @@ body {
     background-image: url("image01.jpg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    
 }
 
 a:hover:after {
@@ -36,7 +37,7 @@ window.onload = function () {
 
 var slider1 = new rSlider({
                     target: '#slider1',
-                    values: [10, 20, 30, 40, 50],
+                    values: [0, 10, 20, 30, 40, 50],
                     range: false,
                     set: [30],
                     tooltip: false,
@@ -95,14 +96,15 @@ var slider1 = new rSlider({
 
 					<br/><br/>
 
-					<div class="form-group" style="width: 40%; float: left;">
+					<div class="form-group" style="width: 20%; float: left;">
 					
-						<label for="requiredMW">EV Load(KWH):</label> 
-						<input type="text" class="form-control" name="requiredMW" value="2" />
+						<label for="requiredMW">Load/EV (KWh):</label> 
+						<input type="text" class="form-control" name="requiredMW" value="105" />
 					</div>
 
-					<div class="form-group" style="width: 40%; float: right;">
-						<label for="noOfEV2017">No of EV in 2017:</label> <input type="text" class="form-control" value="65000" disabled="true"/>
+					<div class="form-group" style="width: 30%; float: right;">
+						<label for="noOfEV2017">EV's in 2018:</label> 
+						<input type="text" class="form-control" value="5000" disabled="true"/>
 					</div>
 					
 					<br/><br/>
@@ -125,8 +127,7 @@ var slider1 = new rSlider({
 
 					<div class="form-group" style="float: right;">
 						<p>
-							<button type="submit" onclick="createNewChart()" class="btn btn-default">Submit</button>
-							<button type="submit" onclick="callOnRest()" class="btn btn-default">Reset</button>
+							<button type="submit" onclick="createNewChart()" class="btn btn-default">Calculate</button>
 						</p>
 					</div>
 
@@ -141,7 +142,7 @@ var slider1 = new rSlider({
 			  	
 			</ul>
 		</div>
-		<div class="row" style="padding:10px; border-radius:5px; height:420px; border:1px solid #CDDFE9; background-color:#CDDFE9;" id="parentDiv">		
+		<div class="row" style="padding:10px; border-radius:5px; height:420px; border:1px solid #337ab7; background-color:#F9FBFD;" id="parentDiv">		
 		</div>
 	</div>
 	
@@ -181,14 +182,14 @@ var slider1 = new rSlider({
 	<script type="text/javascript" src="/js/Chart.min.js"></script>
 	<script type="text/javascript" src="/js/getChartData.js"></script>
 	<script type="text/javascript">
-	userScript.getChartData(30, 3, 2, 65000);
+	userScript.getChartData2(30, 3, 2, 65000);
 	
 	function createNewChart() {
 		var requiredMWParam = $('input[name="requiredMW"]').val();
 		var noOfEV2017Param = $('input[name="noOfEV2017"]').val();
 		var percentageEVParam = $('input[name="percentageEV"]').val();
 		var startHourParam = $('input[name="startHour"]').val();
-		userScript.getChartData(percentageEVParam, startHourParam[0], requiredMWParam, noOfEV2017Param);
+		userScript.getChartData(percentageEVParam, startHourParam, requiredMWParam, noOfEV2017Param);
 	}
 	
 	function callOnRest() {

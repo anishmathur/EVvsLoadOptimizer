@@ -11,11 +11,10 @@ var options = {
 var prepareChartContext = function (canvasNode,chartdata) {
 	 /* body... */
 	 var ctx = canvasNode[0].getContext("2d");
-	 ctx.canvas.width = "600";
+	 ctx.canvas.width = "300";
 	 ctx.canvas.height = "300";
 	 var data = {
     labels: chartdata.lables,
-    
     datasets: [
         {
             label: chartdata.datasets[0].name,
@@ -36,19 +35,7 @@ var prepareChartContext = function (canvasNode,chartdata) {
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
             data: chartdata.datasets[1].value
-        },
-        {
-            label: chartdata.datasets[2].name,
-            fillColor: "rgba(0,100,219,0.1)",
-            strokeColor: "rgba(0,100,219,1)",
-            pointColor: "rgba(0,100,219,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[2].value
-        },
-        ]
-	 
+        }]
      }
      return {
      	ctx : ctx,
@@ -59,7 +46,7 @@ var prepareChartContext = function (canvasNode,chartdata) {
 
 var createCanvasNode = function () {
 	 /* body... */ 
-	 var $div = $("<div>", {class: "col-md-8"});
+	 var $div = $("<div>", {class: "col-md-4"});
 	 var $span = $("<span>", {class: "appName"});
 	 $($div).append($span);
 	 var $canvas = $("<canvas>",{class: "chartClass"});
@@ -76,10 +63,10 @@ var createContainerNode = function () {
 };
 
 
-var getChartData = function (percentageEV, startHour, requiredMW) {
-	
-	var endpoint="/viewCharts?percentageEV="+percentageEV+"&startHour="+startHour+"&requiredMW="+requiredMW;
-	 $.getJSON(endpoint)	 
+var getChartData = function () {
+	 /* body... */ 
+	 var endpoint="/viewCharts/";
+	 $.getJSON(endpoint)
 	 .done(function(data){
 	 	var parentDiv = $("#parentDiv");
 	 	/* little housekeeping */
@@ -106,48 +93,7 @@ var getChartData = function (percentageEV, startHour, requiredMW) {
 	 	 
 	 	 $.each(chartData,function (index,value) {
 	 	 	 /* body... */ 
-	 	 	 charts[index] = new Chart(value.ctx).Line(value.data,options);
-	 	 });
-
-	 })
-	.fail(function( jqxhr, textStatus, error ) {
-    	var err = textStatus + ", " + error;
-    	console.log( "Request Failed: " + err );
-	});
-};
-
-
-var getChartData2 = function (percentageEV, startHour, requiredMW) {
-	
-	var endpoint="/viewCharts2?percentageEV="+percentageEV+"&startHour="+startHour+"&requiredMW="+requiredMW;
-	 $.getJSON(endpoint)	 
-	 .done(function(data){
-	 	var parentDiv = $("#parentDiv");
-	 	/* little housekeeping */
-	 	$(parentDiv).empty();
-	 	chartData = [];
-		charts = [];
-	 	var containerNode;
-	 	var canvasNode;
-	 	for (var i =0; i<data.length; i++) {
-	 		if (i%3 == 0) {
-	 			containerNode = createContainerNode();
-	 			canvasNode = createCanvasNode();
-	 			chartData[i] = prepareChartContext(canvasNode.canvasHandler,data[i]);
-	 			$($(canvasNode.canvasNodeHandler).find('span')).append(document.createTextNode(data[i].appName));
-	 			$(containerNode).append(canvasNode.canvasNodeHandler);
-	 			$(parentDiv).append(containerNode);
-	 		} else{
-	 			canvasNode = createCanvasNode();
-	 			chartData[i] = prepareChartContext(canvasNode.canvasHandler,data[i]);
-	 			$($(canvasNode.canvasNodeHandler).find('span')).append(document.createTextNode(data[i].appName));	 	 
-	 			$(containerNode).append(canvasNode.canvasNodeHandler);
-	 		};
-	 	 }
-	 	 
-	 	 $.each(chartData,function (index,value) {
-	 	 	 /* body... */ 
-	 	 	 charts[index] = new Chart(value.ctx).Line(value.data,options);
+	 	 	 charts[index] = new Chart(value.ctx).Bar(value.data,options);
 	 	 });
 
 	 })

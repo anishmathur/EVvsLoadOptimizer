@@ -1,6 +1,7 @@
 package com.sapient.hackathon.domain;
 
-import java.time.Instant;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +17,10 @@ public class SettlementInterval {
 	private int id;
 
 	@Column(name = "EFFECTIVE_START_TIME")
-	private Instant effectiveStartTime;
+	private Date effectiveStartTime;
 	
 	@Column(name = "EFFECTIVE_END_TIME")
-	private Instant effectiveEndTime;
+	private Date effectiveEndTime;
 
 	public int getId() {
 		return id;
@@ -29,21 +30,23 @@ public class SettlementInterval {
 		this.id = id;
 	}
 
-	public Instant getEffectiveStartTime() {
+	public Date getEffectiveStartTime() {
 		return effectiveStartTime;
 	}
 
-	public void setEffectiveStartTime(Instant effectiveStartTime) {
+	public void setEffectiveStartTime(Date effectiveStartTime) {
 		this.effectiveStartTime = effectiveStartTime;
 	}
 
-	public Instant getEffectiveEndTime() {
+	public Date getEffectiveEndTime() {
 		return effectiveEndTime;
 	}
 
-	public void setEffectiveEndTime(Instant effectiveEndTime) {
+	public void setEffectiveEndTime(Date effectiveEndTime) {
 		this.effectiveEndTime = effectiveEndTime;
 	}
+
+	
 
 	
 }

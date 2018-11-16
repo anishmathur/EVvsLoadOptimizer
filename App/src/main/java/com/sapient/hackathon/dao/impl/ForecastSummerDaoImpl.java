@@ -8,45 +8,44 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import com.sapient.hackathon.dao.ForecastWinterDao;
-import com.sapient.hackathon.domain.ForecastWinter;
+import com.sapient.hackathon.dao.ForecastSummerDao;
+import com.sapient.hackathon.domain.ForecastSummer;
 
 @Repository
 @Transactional
-public class ForecastWinterDaoImpl implements ForecastWinterDao {
+public class ForecastSummerDaoImpl implements ForecastSummerDao {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ForecastWinter> getForecastForWinter() {
-		return entityManager.createQuery("from ForecastWinter").getResultList();
+	public List<ForecastSummer> getForecastForSummer() {
+		return entityManager.createQuery("from ForecastSummer").getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ForecastWinter> getForecastForAwinterDay() {
+	public List<ForecastSummer> getForecastForASummerDay() {
 		return entityManager
-				.createQuery("from ForecastWinter where settlementInterval>=70297 and settlementInterval<=70320")
+				.createQuery("from ForecastSummer where settlementInterval>=70297 and settlementInterval<=70320")
 				.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ForecastWinter> getForecastForAwinterDay(int permutation, int startSettlementIntervalId, int endSettlementIntervalId) {
+	public List<ForecastSummer> getForecastForASummerDay(int startSettlementIntervalId, int endSettlementIntervalId) {
 		return entityManager
-				.createQuery("from ForecastWinter where permutation=:permutation and settlementInterval>= :startSettlementIntervalId and settlementInterval<= :endSettlementIntervalId")
-				.setParameter("permutation", permutation)
+				.createQuery("from ForecastSummer where settlementInterval>= :startSettlementIntervalId and settlementInterval<= :endSettlementIntervalId")
 				.setParameter("startSettlementIntervalId", startSettlementIntervalId)
 				.setParameter("endSettlementIntervalId", endSettlementIntervalId).getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ForecastWinter> getForecastForANormalDay() {
+	public List<ForecastSummer> getForecastForANormalDay() {
 		return entityManager
-				.createQuery("from ForecastWinter where settlementInterval>=50297 and settlementInterval<=50320")
+				.createQuery("from ForecastSummer where settlementInterval>=50297 and settlementInterval<=50320")
 				.getResultList();
 	}
 
@@ -54,7 +53,7 @@ public class ForecastWinterDaoImpl implements ForecastWinterDao {
 	public Double getMaxYhat(int permutation, int startSettlementIntervalId, int endSettlementIntervalId) {
 
 			return (Double) entityManager
-				.createQuery("select max(yHat) from ForecastWinter where permutation= :permutation and settlementInterval>= :startSettlementIntervalId and settlementInterval<= :endSettlementIntervalId")
+				.createQuery("select max(yHat) from ForecastSummer where permutation= :permutation and settlementInterval>= :startSettlementIntervalId and settlementInterval<= :endSettlementIntervalId")
 				.setParameter("permutation", permutation)
 				.setParameter("startSettlementIntervalId", startSettlementIntervalId)
 				.setParameter("endSettlementIntervalId", endSettlementIntervalId).getSingleResult();
@@ -63,7 +62,7 @@ public class ForecastWinterDaoImpl implements ForecastWinterDao {
 	@SuppressWarnings("unchecked")
 	public List<Integer> getSettlementInterval(Double yHat) {
 
-		return entityManager.createQuery("select settlementInterval from ForecastWinter where yHat= :yHat ")
+		return entityManager.createQuery("select settlementInterval from ForecastSummer where yHat= :yHat ")
 				.setParameter("yHat", yHat).getResultList();
 	}
 }

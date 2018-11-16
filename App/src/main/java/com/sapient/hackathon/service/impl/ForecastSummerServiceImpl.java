@@ -14,24 +14,22 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sapient.hackathon.dao.ForecastWinterDao;
-import com.sapient.hackathon.domain.ForecastWinter;
+import com.sapient.hackathon.dao.ForecastSummerDao;
+import com.sapient.hackathon.domain.ForecastSummer;
 import com.sapient.hackathon.domain.Permutation;
 import com.sapient.hackathon.domain.SettlementInterval;
 import com.sapient.hackathon.model.ChartsResponse;
 import com.sapient.hackathon.model.Dataset;
 import com.sapient.hackathon.model.JsonDataset;
-import com.sapient.hackathon.service.ForecastWinterService;
+import com.sapient.hackathon.service.ForecastSummerService;
 import com.sapient.hackathon.service.PermutationService;
 import com.sapient.hackathon.service.SettlementIntervalService;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-
 @Service
-public class ForecastWinterServiceImpl implements ForecastWinterService{
+public class ForecastSummerServiceImpl implements ForecastSummerService{
 
 	@Autowired
-	ForecastWinterDao forecastWinterDao;
+	ForecastSummerDao forecastSummerDao;
 	
 	@Autowired
 	SettlementIntervalService settlementIntervalService;
@@ -41,15 +39,15 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 	
 	
 	@Override
-	public List<ForecastWinter> getForecastForWinter() {
-		return forecastWinterDao.getForecastForWinter();
+	public List<ForecastSummer> getForecastForSummer() {
+		return forecastSummerDao.getForecastForSummer();
 	}
 
 	@Override
-	public ChartsResponse getForecastForAwinterDay(int evpercentage, String requestedHour) {
+	public ChartsResponse getForecastForASummerDay(int evpercentage, String requestedHour) {
 	
-		System.out.println("AAAA :"+evpercentage);
-		System.out.println("BBBB :"+requestedHour);
+		System.out.println("SUMMER-AAAA :"+evpercentage);
+		System.out.println("SUMMER-BBBB :"+requestedHour);
 		
 		Map<String, Integer> hourMap = new HashMap<String, Integer>();
 		hourMap.put("0,3",1);
@@ -62,20 +60,20 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		hourMap.put("21,24",8);
 		
 		//TODO: remove hardcoded value
-		Permutation permutation = permutationService.getPermutationForEVPercentandWindow(evpercentage, hourMap.get(requestedHour));
-		System.out.println("Permutation :"+permutation.getId());
+		Permutation permutation = permutationService.getPermutationForEVPercentandWindow(0, hourMap.get(requestedHour));
+		System.out.println("SUMMER-Permutation :"+permutation.getId());
 		//Get Max yHat between settlement interval 105193,113952
-		Double yhat = forecastWinterDao.getMaxYhat(permutation.getId(), 105193,113952);
-		System.out.println("Max yHat between settlement interval 105193,113952:"+yhat);
+		Double yhat = forecastSummerDao.getMaxYhat(permutation.getId(), 105193,113952);
+		System.out.println("SUMMER-Max yHat between settlement interval 105193,113952:"+yhat);
 		
 		
 		//Get Settlement Intervals for Max(yHat)
-		List<Integer> sids = forecastWinterDao.getSettlementInterval(yhat);
-		System.out.println("Settlement Intervals for max yHat:"+sids);
+		List<Integer> sids = forecastSummerDao.getSettlementInterval(yhat);
+		System.out.println("SUMMER-Settlement Intervals for max yHat:"+sids);
 		
 		//Get Settlement Interval for Max Yhat-sid
 		SettlementInterval siMaxYhat = settlementIntervalService.getSettelementInterval(sids.get(0));
-		System.out.println("Settlement Interval for Max Yhat-settlementInterval:"+siMaxYhat.getEffectiveEndTime());
+		System.out.println("SUMMER-Settlement Interval for Max Yhat-settlementInterval:"+siMaxYhat.getEffectiveEndTime());
 		
 		//Let all settlement interval for that day
 		Date topOfDay = siMaxYhat.getEffectiveEndTime();
@@ -87,16 +85,16 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		//Date endOfDay = siMaxYhat.getEffectiveEndTime();
 		//endOfDay.setHours(23);
 		
-		System.out.println("Start Date:"+topOfDay);
-		System.out.println("End Date:"+endOfDay);
+		System.out.println("SUMMER-Start Date:"+topOfDay);
+		System.out.println("SUMMER-End Date:"+endOfDay);
 		List<SettlementInterval> sis = settlementIntervalService.getSettelementInterval(topOfDay, endOfDay);
 		
-		System.out.println("Sids"+sis.get(0).getId());
+		System.out.println("SUMMER-Sids"+sis.get(0).getId());
 		
-		List<ForecastWinter> forecasts = forecastWinterDao.getForecastForAwinterDay(permutation.getId(),sis.get(0).getId(), sis.get(0).getId()+23);
+		List<ForecastSummer> forecasts = forecastSummerDao.getForecastForASummerDay(sis.get(0).getId(), sis.get(0).getId()+23);
 		
 		ChartsResponse chartResponse = new ChartsResponse();
-		chartResponse.setAppName("Winter Forecast");
+		chartResponse.setAppName("Summer Forecast");
 		
 		List<String> lables = new ArrayList<String>();
 		IntStream.range(1,24).forEach(i -> lables.add(Integer.toString(i)));
@@ -106,23 +104,16 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		List<Dataset> datasets = new ArrayList<Dataset>();
 		Dataset dataset = new Dataset();
 		
-		dataset.setName("Load");				
-		dataset.setValue(forecasts.stream().map(ForecastWinter::getyHat).collect(Collectors.toList()));
+		dataset.setName("My First dataset");				
+		dataset.setValue(forecasts.stream().map(ForecastSummer::getyHat).collect(Collectors.toList()));
 		datasets.add(dataset);
 		
 		
 		Dataset datasetNormalDay = new Dataset();
 		
 		datasetNormalDay.setName("My Second dataset");				
-		datasetNormalDay.setValue(forecasts.stream().map(ForecastWinter::getyHat).map(i->i-500).collect(Collectors.toList()));
+		datasetNormalDay.setValue(forecasts.stream().map(ForecastSummer::getyHat).map(i->i-500).collect(Collectors.toList()));
 		datasets.add(datasetNormalDay);
-		Dataset forecastedGeneration = new Dataset();
-		List<Double> generation = new ArrayList<Double>();
-		IntStream.range(1,24).forEach(i -> generation.add(12880.0));
-		generation.stream().forEach(System.out::println);
-		forecastedGeneration.setName("Generation");;
-		forecastedGeneration.setValue(generation);
-		datasets.add(forecastedGeneration);
 		chartResponse.setDatasets(datasets);
 		
 		return chartResponse;
@@ -133,7 +124,7 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 	public Map<String, Double>  getForecastForANormalDay() {
 		// TODO Auto-generated method stub
 		
-		List<ForecastWinter> forecasts = forecastWinterDao.getForecastForAwinterDay();
+		List<ForecastSummer> forecasts = forecastSummerDao.getForecastForASummerDay();
 		
 		//JsonDataset dataset = new JsonDataset();
 		List<JsonDataset> datasets = new ArrayList<JsonDataset>();
@@ -152,7 +143,7 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		
 		//IntStream.range(1,24).forEach(i -> lables.add(Integer.toString(i)));
 		
-		//forecasts.stream().map(ForecastWinter::getyHat).collect(Collectors.toList());
+		//forecasts.stream().map(ForecastSummer::getyHat).collect(Collectors.toList());
 		return map;
 		
 	}
