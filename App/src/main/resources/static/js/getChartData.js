@@ -111,6 +111,10 @@ var getChartData = function (percentageEV, startHour, requiredMW) {
 	 	 $.each(chartData,function (index,value) {
 	 	 	 /* body... */ 
 	 	 	 charts[index] = new Chart(value.ctx).Line(value.data,options);
+	 	 	var legend = charts[index].generateLegend();
+
+	 	 	  //and append it to your page somewhere
+	 	 	  $(parentDiv).append(legend);
 	 	 });
 
 	 })

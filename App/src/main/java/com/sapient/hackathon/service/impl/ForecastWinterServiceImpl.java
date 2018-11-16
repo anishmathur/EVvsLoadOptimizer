@@ -81,7 +81,7 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 			
 		}
 		System.out.println("Settlement Intervals for max yHat:"+setId);
-		
+		setId=113809;
 		//Get Settlement Interval for Max Yhat-sid
 		SettlementInterval siMaxYhat = settlementIntervalService.getSettelementInterval(setId);
 		System.out.println("Settlement Interval for Max Yhat-settlementInterval:"+siMaxYhat.getEffectiveEndTime());
@@ -106,7 +106,7 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		List<ForecastWinter> forecastsWithoutEV = forecastWinterDao.getForecastForAwinterDay(81,sis.get(0).getId(), sis.get(0).getId()+23);
 		
 		ChartsResponse chartResponse = new ChartsResponse();
-		chartResponse.setAppName("Winter Forecast");
+		chartResponse.setAppName("Winter Forecast for 2022");
 		
 		List<String> lables = new ArrayList<String>();
 		IntStream.range(1,24).forEach(i -> lables.add(Integer.toString(i)));

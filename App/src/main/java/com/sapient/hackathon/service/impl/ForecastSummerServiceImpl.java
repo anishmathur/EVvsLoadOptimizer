@@ -105,7 +105,7 @@ public class ForecastSummerServiceImpl implements ForecastSummerService{
 		
 		
 		ChartsResponse chartResponse = new ChartsResponse();
-		chartResponse.setAppName("Summer Forecast");
+		chartResponse.setAppName("Summer Forecast for 2022");
 		
 		List<String> lables = new ArrayList<String>();
 		IntStream.range(1,24).forEach(i -> lables.add(Integer.toString(i)));
