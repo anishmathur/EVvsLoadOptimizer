@@ -17,5 +17,5 @@ public interface ForecastSummerDao {
 
 	public List<Integer> getSettlementInterval(Double integer);
 
-	public List<ForecastSummer> getForecastForASummerDay(int startId, int endId);
+	public List<ForecastSummer> getForecastForASummerDay(int permuation,int startId, int endId);
 }

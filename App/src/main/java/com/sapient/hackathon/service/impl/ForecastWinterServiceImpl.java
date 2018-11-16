@@ -65,7 +65,7 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		Permutation permutation = permutationService.getPermutationForEVPercentandWindow(evpercentage, hourMap.get(requestedHour));
 		System.out.println("Permutation :"+permutation.getId());
 		//Get Max yHat between settlement interval 105193,113952
-		Double yhat = forecastWinterDao.getMaxYhat(permutation.getId(), 105193,113952);
+		Double yhat = forecastWinterDao.getMaxYhat(permutation.getId(), 105193,107352);
 		System.out.println("Max yHat between settlement interval 105193,113952:"+yhat);
 		
 		
@@ -73,8 +73,17 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		List<Integer> sids = forecastWinterDao.getSettlementInterval(yhat);
 		System.out.println("Settlement Intervals for max yHat:"+sids);
 		
+		int setId=0;
+		for (Integer temp : sids) {
+			if(temp>=105193 && temp<=107352){
+				setId = temp;
+			}
+			
+		}
+		System.out.println("Settlement Intervals for max yHat:"+setId);
+		
 		//Get Settlement Interval for Max Yhat-sid
-		SettlementInterval siMaxYhat = settlementIntervalService.getSettelementInterval(sids.get(0));
+		SettlementInterval siMaxYhat = settlementIntervalService.getSettelementInterval(setId);
 		System.out.println("Settlement Interval for Max Yhat-settlementInterval:"+siMaxYhat.getEffectiveEndTime());
 		
 		//Let all settlement interval for that day
@@ -93,7 +102,8 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		
 		System.out.println("Sids"+sis.get(0).getId());
 		
-		List<ForecastWinter> forecasts = forecastWinterDao.getForecastForAwinterDay(permutation.getId(),sis.get(0).getId(), sis.get(0).getId()+23);
+		List<ForecastWinter> forecastsWithEV = forecastWinterDao.getForecastForAwinterDay(permutation.getId(),sis.get(0).getId(), sis.get(0).getId()+23);
+		List<ForecastWinter> forecastsWithoutEV = forecastWinterDao.getForecastForAwinterDay(81,sis.get(0).getId(), sis.get(0).getId()+23);
 		
 		ChartsResponse chartResponse = new ChartsResponse();
 		chartResponse.setAppName("Winter Forecast");
@@ -106,21 +116,21 @@ public class ForecastWinterServiceImpl implements ForecastWinterService{
 		List<Dataset> datasets = new ArrayList<Dataset>();
 		Dataset dataset = new Dataset();
 		
-		dataset.setName("Load");				
-		dataset.setValue(forecasts.stream().map(ForecastWinter::getyHat).collect(Collectors.toList()));
+		dataset.setName(" Load with EVs ");				
+		dataset.setValue(forecastsWithEV.stream().map(ForecastWinter::getyHat).collect(Collectors.toList()));
 		datasets.add(dataset);
 		
 		
 		Dataset datasetNormalDay = new Dataset();
 		
-		datasetNormalDay.setName("My Second dataset");				
-		datasetNormalDay.setValue(forecasts.stream().map(ForecastWinter::getyHat).map(i->i-500).collect(Collectors.toList()));
+		datasetNormalDay.setName(" Load without EVs ");				
+		datasetNormalDay.setValue(forecastsWithoutEV.stream().map(ForecastWinter::getyHat).collect(Collectors.toList()));
 		datasets.add(datasetNormalDay);
 		Dataset forecastedGeneration = new Dataset();
 		List<Double> generation = new ArrayList<Double>();
 		IntStream.range(1,24).forEach(i -> generation.add(12880.0));
 		generation.stream().forEach(System.out::println);
-		forecastedGeneration.setName("Generation");;
+		forecastedGeneration.setName(" Generation ");;
 		forecastedGeneration.setValue(generation);
 		datasets.add(forecastedGeneration);
 		chartResponse.setDatasets(datasets);

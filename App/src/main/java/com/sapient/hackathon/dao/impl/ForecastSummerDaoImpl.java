@@ -34,9 +34,10 @@ public class ForecastSummerDaoImpl implements ForecastSummerDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ForecastSummer> getForecastForASummerDay(int startSettlementIntervalId, int endSettlementIntervalId) {
+	public List<ForecastSummer> getForecastForASummerDay(int permutation,int startSettlementIntervalId, int endSettlementIntervalId) {
 		return entityManager
-				.createQuery("from ForecastSummer where settlementInterval>= :startSettlementIntervalId and settlementInterval<= :endSettlementIntervalId")
+				.createQuery("from ForecastSummer where permutation=:permutation and settlementInterval>= :startSettlementIntervalId and settlementInterval<= :endSettlementIntervalId")
+				.setParameter("permutation", permutation)
 				.setParameter("startSettlementIntervalId", startSettlementIntervalId)
 				.setParameter("endSettlementIntervalId", endSettlementIntervalId).getResultList();
 	}

@@ -95,7 +95,7 @@ public class EVController {
     	//electricVehicle.setRequiredMW(electricVehicleService.addValue(electricVehicle.getRequiredMW()));
        
     	List<ChartsResponse> chartsResponse = new ArrayList<ChartsResponse>();
-		chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+    	chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(((ElectricVehicle)session.getAttribute("eVehicle")).getPercentageEV(), ((ElectricVehicle)session.getAttribute("eVehicle")).getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay());
@@ -116,7 +116,8 @@ public class EVController {
     	//electricVehicle.setRequiredMW(electricVehicleService.addValue(electricVehicle.getRequiredMW()));
        
     	List<ChartsResponse> chartsResponse = new ArrayList<ChartsResponse>();
-		chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+    	chartsResponse.add(forecastSummerService.getForecastForASummerDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
+    	
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(electricVehicle.getPercentageEV(),electricVehicle.getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay(((ElectricVehicle)session.getAttribute("eVehicle")).getPercentageEV(), ((ElectricVehicle)session.getAttribute("eVehicle")).getStartHour()));
 		//chartsResponse.add(forecastWinterService.getForecastForAwinterDay());

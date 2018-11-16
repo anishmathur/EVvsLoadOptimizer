@@ -13,7 +13,7 @@ var prepareChartContext = function (canvasNode,chartdata) {
 	 /* body... */
 	 var ctx = canvasNode[0].getContext("2d");
 	 ctx.canvas.width = "600";
-	 ctx.canvas.height = "300";
+	 ctx.canvas.height = "250";
 	 var data = {
     labels: chartdata.lables,
     
@@ -26,7 +26,8 @@ var prepareChartContext = function (canvasNode,chartdata) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[0].value
+            data: chartdata.datasets[0].value,
+            fill: false
         },
         {
             label: chartdata.datasets[1].name,
@@ -36,17 +37,19 @@ var prepareChartContext = function (canvasNode,chartdata) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[1].value
+            data: chartdata.datasets[1].value,
+            fill: false
         },
         {
             label: chartdata.datasets[2].name,
             fillColor: "rgb(255,255,255,0)",
-            strokeColor: "rgba(0,100,219,1)",
-            pointColor: "rgba(0,100,219,1)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(200,200,219,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: chartdata.datasets[2].value
+            data: chartdata.datasets[2].value,
+            fill: false
         },
         ]
 	 
@@ -145,6 +148,10 @@ var getChartData = function (percentageEV, startHour, requiredMW) {
 	 	 $.each(chartData,function (index,value) {
 	 	 	 /* body... */ 
 	 	 	 charts[index] = new Chart(value.ctx).Line(value.data,options);
+			 var legend = charts[index].generateLegend();
+
+	 	 	  //and append it to your page somewhere
+	 	 	  $(parentDiv).append(legend);
 	 	 });
 
 	 })
